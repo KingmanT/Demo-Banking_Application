@@ -4,12 +4,7 @@ pipeline {
     stage ('Build') {
       steps {
         sh '''#!/bin/bash
-        python3 -m venv test
-        source test/bin/activate
-        pip install pip --upgrade
-        pip install -r requirements.txt
-        export FLASK_APP=app
-        flask run &
+        echo "This is the build stage"
         '''
      }
    }
