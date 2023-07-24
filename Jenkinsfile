@@ -7,8 +7,6 @@ pipeline {
         python3.7 -m venv test
         source ./test/bin/activate
         pip install -r requirements.txt
-        python database.py
-        python load_data.py
         '''
      }
    }
