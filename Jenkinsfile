@@ -28,7 +28,7 @@ pipeline {
          pip install -r requirements.txt
          python database.py
          python load_data.py
-         python app.py
+         python app.py &
          '''          
        } 
      }
