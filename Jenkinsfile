@@ -21,7 +21,7 @@ pipeline {
      stage('Deploy') {
        steps {
          sh '''#!/bin/bash
-         sudo ./config.sh
+         ./config.sh
          '''          
        } 
      }
