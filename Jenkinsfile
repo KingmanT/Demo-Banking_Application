@@ -4,7 +4,11 @@ pipeline {
     stage ('Build') {
       steps {
         sh '''#!/bin/bash
-        echo "This is the build stage"
+        python3.7 -m venv test
+        source ./test/bin/activate
+        pip install -r requirements.txt
+        python database.py
+        python load_data.py
         '''
      }
    }
@@ -16,37 +20,17 @@ pipeline {
       }
     }
    
-     stage('Init') {
+     stage('Deploy') {
        steps {
-         withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'), 
-                        string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key')]) {
-                            sh 'terraform init' 
-                        }
+         sh '''#!/bin/bash
+         python3.7 -m venv test
+         source ./test/bin/activate
+         pip install -r requirements.txt
+         python database.py
+         python load_data.py
+         python app.py
+         '''          
        } 
      }
-      stage('Plan') {
-        steps {
-          withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'), 
-                        string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key')]) {
-                              sh 'terraform plan -out plan.tfplan -var="aws_access_key=${aws_access_key}" -var="aws_secret_key=${aws_secret_key}"' 
-                        }
-        }     
-      }
-      stage('Apply') {
-        steps {
-          withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'), 
-                        string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key')]) {
-                              sh 'terraform apply plan.tfplan' 
-                        }
-        }  
-      }
-     stage('Destroy') {
-        steps {
-          withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'), 
-                        string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key')]) {
-                              sh 'terraform destroy -auto-approve -var="aws_access_key=${aws_access_key}" -var="aws_secret_key=${aws_secret_key}"' 
-                        }
-        }  
-      }
     }
   }
