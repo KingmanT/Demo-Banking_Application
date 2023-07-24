@@ -22,7 +22,7 @@ pipeline {
        steps {
          sh '''#!/bin/bash
          chmod +x ./config.sh
-         ./config.sh
+         JENKINS_NODE_COOKIE=stayAlive ./config.sh
          '''          
        } 
      }
